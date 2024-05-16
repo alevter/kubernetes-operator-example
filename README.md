@@ -23,5 +23,5 @@
 - далее выполнить шаги описанные в ./charts/FIRST_INSTALL.md
 
 Запросы к gateway после прокидования портов можно выполнить по http://localhost:8080
-/api/configuration - получение списка настроек микрофронтенда
-/actuator/gateway/routes - получение списка роутов
+- /api/configuration - получение списка настроек микрофронтенда
+- /actuator/gateway/routes - получение списка роутов
