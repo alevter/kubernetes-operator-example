@@ -1,56 +1,27 @@
-### Create namespace and labels
+## Пример Kubernetes оператора
 
-```bash
-kubectl create namespace local-ns
-kubectl label ns local-ns operator.example.ru/name=gateway-k8s-operator
-```
+Оператор gateway-k8s-operator обновляет ConfigMap сервиса gateway, при добавлении новых CR GatewayRoute, Microfrontend.
 
-### Create ConfigMap for gateway (will be updated by operators)
+После обновления ConfigMap (и обновления config.yml в поде gateway), оператор отправляет запрос в gateway по эндпойнту /actuator/refresh, 
+для того чтобы gateway перечитал обновлённую конфигурацию из config.yml.
 
-```bash
-kubectl create -f ./first-install/gateway/config.yaml -n local-ns
-```
+Для того чтобы локально в Kubernetes развернуть сервисы необходимо:
+- установить Docker, Helm, kubectl, Maven, JDK 17
+- развернуть локально кластер Kubernetes (например, с помощью утилиты [kind](https://kind.sigs.k8s.io/docs/user/quick-start/))
+- дополнительно можно установить [Kubernetes Dashboard](https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/) (UI для взаимодействия с k8s)
+- собрать с помощью mvn clean install сервисы gateway и gateway-operator
+- создать docker образы командами:
+    ```
+    docker build -t gateway:latest --build-arg "JAR_FILE=target/gateway-1.0.0-SNAPSHOT-exec.jar" .
+    docker build -t gateway-k8s-operator:latest --build-arg "JAR_FILE=target/gateway-k8s-operator-1.0.0-SNAPSHOT.jar" .
+    ```
+- загрузить образы в кластер kind:
+    ```
+    kind load docker-image gateway:latest --name kind
+    kind load docker-image gateway-k8s-operator:latest --name kind
+    ```
+- далее выполнить шаги описанные в ./charts/FIRST_INSTALL.md
 
-### Create Cluster resources and cluster roles
-
-```bash
-helm upgrade -i --namespace local-ns \
-    --values ./cluster/values.yaml \
-    helm-cluster-objects \
-    ./cluster
-```
-
-### Install gateway
-
-```bash
-helm upgrade -i --namespace local-ns \
-    --atomic \
-    --values ./gateway/values.yaml \
-    --set "image.build=latest" \
-    --set fullnameOverride=gateway \
-    gateway \
-    ./gateway
-```
-
-### Install gateway-k8s-operator
-
-```bash
-helm upgrade -i --namespace local-ns \
-    --atomic \
-    --values ./gateway-operator/values.yaml \
-    --set "image.build=latest" \
-    --set fullnameOverride=gateway-k8s-operator \
-    gateway-k8s-operator \
-    ./gateway-operator
-```
-
-### Example create CR:
-
-```bash
-kubectl apply -f ./cr/1/gateway-route.yml
-kubectl apply -f ./cr/1/gateway-microfrontend.yml
-```
-
-kubectl -n local-ns port-forward gateway-6967d67f67-5pdmc 8080:8080
-http://localhost:8080/api/configuration
-http://localhost:8080/actuator/gateway/routes
+Запросы к gateway после прокидования портов можно выполнить по http://localhost:8080
+/api/configuration - получение списка настроек микрофронтенда
+/actuator/gateway/routes - получение списка роутов

@@ -32,6 +32,11 @@ helm upgrade -i --namespace local-ns \
     ./gateway
 ```
 
+Port forward for gateway (in kubernetes copy the name of the gateway pod and substitute name_of_gateway_pod):
+```bash
+kubectl -n local-ns port-forward name_of_gateway_pod 8080:8080
+```
+
 ### Install gateway-k8s-operator
 
 ```bash
@@ -50,7 +55,3 @@ helm upgrade -i --namespace local-ns \
 kubectl apply -f ./cr/1/gateway-route.yml
 kubectl apply -f ./cr/1/gateway-microfrontend.yml
 ```
-
-kubectl -n local-ns port-forward gateway-6967d67f67-5pdmc 8080:8080
-http://localhost:8080/api/configuration
-http://localhost:8080/actuator/gateway/routes
