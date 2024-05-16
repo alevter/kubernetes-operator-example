@@ -1,0 +1,31 @@
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: {{ .Values.ru.example.operator.targetService.configMap.name }}-base
+  labels:
+    app.kubernetes.io/name: {{ include "gateway-k8s-operator.fullname" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  config.yml: |-
+    ru:
+      example:
+        microfrontends: []
+    
+    spring:
+      cloud:
+        discovery:
+          enabled: false
+        gateway:
+          metrics:
+            enabled: true
+          default-filters:
+          routes: []
+    
+    management:
+      endpoint:
+        gateway:
+          enabled: true
+      endpoints:
+        web:
+          exposure:
+            include: refresh,health,metrics,info,prometheus,loggers,gateway

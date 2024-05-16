@@ -1,0 +1,18 @@
+apiVersion: operator.example.ru/v1
+kind: Microfrontend
+metadata:
+  name: microfrontend-1
+  labels:
+    app.example.ru/name: gateway
+spec:
+  name: students
+  path: /students
+  url: /cdn/students
+  filename: remoteStudentsLk.js
+  scope: students_lk
+  module: ./StudentsPage
+  widgets:
+    - name: home-widget
+      module: "./Widget"
+    - name: message-widget
+      module: "./MessageWidget"

@@ -1,0 +1,56 @@
+server:
+  port: 8077
+
+ru:
+  example:
+    microfrontends:
+      - name: "students"
+        path: "/students"
+        url: "/cdn/students"
+        filename: "remoteStudentsLk.js"
+        scope: "students_lk"
+        module: "./StudentsPage"
+        widgets:
+          - name: "home-widget"
+            module: "./Widget"
+          - name: "message-widget"
+            module: "./MessageWidget"
+      - name: "books"
+        path: "/books"
+        url: "/cdn/books"
+        filename: "remoteBooksLk.js"
+        scope: "books_lk"
+        module: "./BooksPage"
+        widgets:
+          - name: "home-widget"
+            module: "./Widget"
+          - name: "message-widget"
+            module: "./MessageWidget"
+spring:
+  cloud:
+    discovery:
+      enabled: false
+    gateway:
+      metrics:
+        enabled: true
+      routes:
+        - id: "students_route"
+          uri: "http://yandex.ru"
+          predicates:
+            - "Path=/api/students/**"
+          filters:
+            - "RewritePath=(/?.*)/api/students/, /"
+        - id: "books_route"
+          uri: "http://google.com"
+          predicates:
+            - "Path=/api/books/**"
+          filters:
+            - "RewritePath=(/?.*)/api/books/, /"
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "refresh,health,metrics,info,prometheus,loggers,gateway"

@@ -1,0 +1,13 @@
+apiVersion: operator.example.ru/v1
+kind: GatewayRoute
+metadata:
+  name: gateway-route-1
+  labels:
+    app.example.ru/name: gateway
+spec:
+  id: students_route
+  uri: http://yandex.ru
+  predicates:
+    - Path=/api/students/**
+  filters:
+    - RewritePath=(/?.*)/api/students/, /

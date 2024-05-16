@@ -1,0 +1,103 @@
+server:
+  port: 8071
+
+ru:
+  example:
+    operator:
+      watched-cr:
+        label:
+          name: "app.example.ru/name"
+          value: "gateway"
+      watched-namespaces:
+        label:
+          name: "operator.example.ru/name"
+          value: "gateway-k8s-operator"
+        refresh:
+          initial-delay: PT1M
+          delay: PT30S
+      target-service:
+        namespace: "local-ns"
+        port: 8080
+        pod:
+          label:
+            name: "app.kubernetes.io/instance"
+            value: "gateway"
+          refresh:
+            delay: PT90S
+        config-map:
+          name: "gateway-config"
+          refresh:
+            initial-delay: PT1M
+            delay: PT30S
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info,prometheus,loggers,threaddump
+    jmx:
+      enabled: false
+  endpoint:
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  add-application-context-header: false
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  security:
+    enabled: false
+
+spring:
+  jmx:
+    enabled: false
+
+endpoints:
+  prometheus:
+    enabled: true
+  metrics:
+    enabled: true
+  jmx:
+    enabled: false
+  trace:
+    enabled: false
+
+logging:
+  level:
+    io:
+      javaoperatorsdk:
+        operator: INFO
+    org:
+      springframework:
+        beans:
+          factory:
+            annotation:
+              AutowiredAnnotationBeanPostProcessor: WARN
+        boot:
+          actuate:
+            endpoint:
+              mvc:
+                EndpointHandlerMapping: WARN
+            context:
+              properties:
+                ConfigurationPropertiesBindingPostProcessor: ERROR
+        web:
+          servlet:
+            mvc:
+              method:
+                annotation: WARN
+          reactive:
+            result:
+              method:
+                annotation:
+                  RequestMappingHandlerMapping: WARN
+        context:
+          annotation:
+            AnnotationConfigApplicationContext: WARN
+          support:
+            PostProcessorRegistrationDelegate: WARN
+    springfox: ERROR

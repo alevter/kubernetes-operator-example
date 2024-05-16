@@ -1,0 +1,5 @@
+config:
+  operator:
+    gateway:
+      name: "gateway-k8s-operator"
+      namespace: "local-ns"

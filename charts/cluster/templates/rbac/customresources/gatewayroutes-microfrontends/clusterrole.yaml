@@ -1,0 +1,8 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gatewayroutes-microfrontends-watcher
+rules:
+  - apiGroups: [ "operator.example.ru" ]
+    resources: [ "gatewayroutes", "microfrontends" ]
+    verbs: [ get, create, update, list, watch, patch, delete ]

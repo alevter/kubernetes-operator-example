@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ .Values.ru.example.operator.targetService.configMap.name }}-updater
+rules:
+  - apiGroups: [ "" ]
+    resources: [ "pods" ]
+    verbs: [ get, list ]
+  - apiGroups: [ "" ]
+    resources: [ "configmaps" ]
+    resourceNames: [ {{ .Values.ru.example.operator.targetService.configMap.name }}, {{ .Values.ru.example.operator.targetService.configMap.name }}-base ]
+    verbs: [ get, list, watch, update ]

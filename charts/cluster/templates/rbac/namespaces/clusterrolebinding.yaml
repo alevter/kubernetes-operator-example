@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: namespaces-watcher
+roleRef:
+  apiGroup: ""
+  kind: ClusterRole
+  name: namespaces-watcher
+subjects:
+{{- range $key, $value := .Values.config.operator }}
+  - kind: ServiceAccount
+    name: {{ $value.name }}
+    namespace: {{ $value.namespace }}
+{{- end }}

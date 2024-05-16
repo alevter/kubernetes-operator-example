@@ -1,0 +1,18 @@
+apiVersion: operator.example.ru/v1
+kind: Microfrontend
+metadata:
+  name: microfrontend-2
+  labels:
+    app.example.ru/name: gateway
+spec:
+  name: books
+  path: /books
+  url: /cdn/books
+  filename: remoteBooksLk.js
+  scope: books_lk
+  module: ./BooksPage
+  widgets:
+    - name: home-widget
+      module: "./Widget"
+    - name: message-widget
+      module: "./MessageWidget"

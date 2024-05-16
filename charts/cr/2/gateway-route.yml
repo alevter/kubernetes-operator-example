@@ -1,0 +1,13 @@
+apiVersion: operator.example.ru/v1
+kind: GatewayRoute
+metadata:
+  name: gateway-route-2
+  labels:
+    app.example.ru/name: gateway
+spec:
+  id: books_route
+  uri: http://google.com
+  predicates:
+    - Path=/api/books/**
+  filters:
+    - RewritePath=(/?.*)/api/books/, /

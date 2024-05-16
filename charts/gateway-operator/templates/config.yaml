@@ -1,0 +1,37 @@
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: {{ .Release.Name }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "gateway-k8s-operator.fullname" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+data:
+  config.yml: |-
+    ru:
+      example:
+        operator:
+          watchedCr:
+            label:
+              name: {{ .Values.ru.example.operator.watchedCr.label.name | default "app.example.ru/name" }}
+              value: {{ .Values.ru.example.operator.watchedCr.label.value }}
+          watchedNamespaces:
+            label:
+              name: {{ .Values.ru.example.operator.watchedNamespaces.label.name }}
+              value: {{ .Values.ru.example.operator.watchedNamespaces.label.value }}
+            refresh:
+              initialDelay: {{ .Values.ru.example.operator.watchedNamespaces.refresh.initialDelay | default "PT1M" }}
+              delay: {{ .Values.ru.example.operator.watchedNamespaces.refresh.delay | default "PT30S" }}
+          targetService:
+            namespace: {{ .Values.ru.example.operator.targetService.namespace }}
+            port: {{ .Values.ru.example.operator.targetService.port }}
+            pod:
+              label:
+                name: {{ .Values.ru.example.operator.targetService.pod.label.name | default "app.kubernetes.io/instance" }}
+                value: {{ .Values.ru.example.operator.targetService.pod.label.value }}
+              refresh:
+                delay: {{ .Values.ru.example.operator.targetService.pod.refresh.delay | default "3m" }}
+            configMap:
+              name: {{ .Values.ru.example.operator.targetService.configMap.name }}
+              refresh:
+                initialDelay: {{ .Values.ru.example.operator.targetService.configMap.refresh.initialDelay | default "PT1M" }}
+                delay: {{ .Values.ru.example.operator.targetService.configMap.refresh.delay | default "PT30S" }}
